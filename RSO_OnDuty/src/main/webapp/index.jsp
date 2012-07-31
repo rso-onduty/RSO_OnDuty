@@ -57,12 +57,12 @@
 				%>
 				<form method="post" action="LoginServlet">
 					<div id="usename-prompt" style="float: left; padding-right: 30px;">
-						<label for="username_input">USERNAME:</label><input
+						<label style="display: block; float: left; padding-top: 12px;" for="username_input">USERNAME:</label><input
 							style="margin: 10px 0px 5px 10px;" id="username_input" type="text" id="username" name="j_username"
 							size="25" />
 					</div>
 					<div id="password-prompt" style="float: left;">
-						<label for="password_input">PASSWORD:</label><input
+						<label style="display: inline; float: left; padding-top: 12px;" for="password_input">PASSWORD:</label><input
 							style="margin: 10px 30px 5px 10px;" id="password_input" type="password" id="password"
 							name="j_password" size="25" />
 					</div>
