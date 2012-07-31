@@ -20,6 +20,7 @@
 		RSODataUtils utils = new RSODataUtils();		
 	
 		String isOnDuty = utils.isOnDuty(request.getRemoteUser());
+		// This is a comment
 	%>
 	
 	<script type="text/javascript">
