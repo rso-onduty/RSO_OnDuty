@@ -107,7 +107,7 @@
 		</dependency>
 		<dependency>
 			<groupId>jboss</groupId>
-			<artifactId>jbossall-client</artifactId>
+			<artifactId>jbosssx-client</artifactId>
 			<version>4.2.2.GA</version>
 			<scope>provided</scope>
 		</dependency>
