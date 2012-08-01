@@ -1,7 +1,6 @@
 package org.frederickiwla.services;
 
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 

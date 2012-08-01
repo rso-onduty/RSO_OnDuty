@@ -32,7 +32,7 @@ public class ChangePassword extends HttpServlet {
 		String username = request.getParameter("username");
 		String oldPassword = request.getParameter("oldPassword");
 		String newPassword = request.getParameter("newPassword");
-		
+				
 		RSODataUtils utils = new RSODataUtils();
 		DBObject rso = utils.getRSO(username);
 		
