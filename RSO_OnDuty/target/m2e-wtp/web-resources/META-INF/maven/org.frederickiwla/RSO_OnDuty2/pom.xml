@@ -106,10 +106,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>jboss</groupId>
-			<artifactId>jbosssx-client</artifactId>
-			<version>4.2.2.GA</version>
-			<scope>provided</scope>
+			<groupId>org.jboss.as</groupId>
+			<artifactId>jboss-as-security</artifactId>
+			<version>7.1.1.Final</version>
 		</dependency>
 	</dependencies>
 	<build>
