@@ -42,7 +42,28 @@ public class OnDutyList {
 		
 	}
 	
+	@GET()
+	@Path("/unvettedRSOList")
+	@Produces("application/json")
+	public Response getUnvettedRSOList() throws UnknownHostException {
+		
+		RSODataUtils utils = new RSODataUtils();
+		String json = utils.getUnvettedRSOList();
+		return Response.status(Response.Status.OK).entity(json).build();
+		
+	}
 	
+	@GET()
+	@Path("/vettedRSOList")
+	@Produces("application/json")
+	public Response getVettedRSOList() throws UnknownHostException {
+		
+		RSODataUtils utils = new RSODataUtils();
+		String json = utils.getVettedRSOList();
+		return Response.status(Response.Status.OK).entity(json).build();
+		
+	}
+		
 	@GET()
 	@Path("/schedule")
 	@Produces("application/json")

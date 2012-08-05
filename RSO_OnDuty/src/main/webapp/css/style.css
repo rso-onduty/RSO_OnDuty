@@ -137,6 +137,13 @@ div.schedule-line-item {
 	border-style: solid;
 }
 
+div.vetting-line-item {
+	height: 145px;
+	border-color: black;
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+}
+
 .reg-label {
 	width: 200px;
 	margin: 0px 10px 0px 20px;
@@ -144,6 +151,11 @@ div.schedule-line-item {
 
 .rso-table-label {
 	width: 80px;
+	text-align: right;
+}
+
+.rso-vetting-table-label {
+	width: 100px;
 	text-align: right;
 }
 

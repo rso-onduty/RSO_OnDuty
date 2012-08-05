@@ -39,6 +39,7 @@ public class RSODataUtils {
 	
 	private static String onDutyListName = "onDutyList";
 	private static String scheduleListName = "scheduleList";
+	private static String rsoListName = "rsoList";
 	
 	private static final String appUserFilenamePath = "C:/jboss-as-7.1.1.Final/standalone/configuration/";
 	private static final String appUserFilename = "application-users.properties";
@@ -60,6 +61,32 @@ public class RSODataUtils {
 			
 	    return allRSOsOnDuty.toString();
 	}
+	
+	public String getUnvettedRSOList() throws UnknownHostException {
+		DB db = getDB();
+		DBCollection onDutyList = db.getCollection(rsoListName);
+		BasicDBObject query = new BasicDBObject();
+		query.put("dateVetted", null);
+				
+		DBCursor cursor = onDutyList.find(query);
+		List<DBObject> unvettedlRSOs = cursor.toArray(); 
+			
+	    return unvettedlRSOs.toString();
+	}
+	
+	
+	public String getVettedRSOList() throws UnknownHostException {
+		DB db = getDB();
+		DBCollection onDutyList = db.getCollection(rsoListName);
+		BasicDBObject query = new BasicDBObject();
+		query.put("dateVetted", new BasicDBObject("$ne", null));  
+		
+		DBCursor cursor = onDutyList.find(query);
+		List<DBObject> unvettedlRSOs = cursor.toArray(); 
+			
+	    return unvettedlRSOs.toString();
+	}
+	
 	
 	public String getRSOOnDutyList(Date now) throws UnknownHostException, MongoException {
 		DB db = getDB();
