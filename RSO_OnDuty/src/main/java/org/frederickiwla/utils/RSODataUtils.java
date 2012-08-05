@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -17,6 +18,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.bson.types.ObjectId;
 import org.jboss.crypto.CryptoUtil;
 
 import com.mongodb.BasicDBObject;
@@ -35,6 +37,9 @@ public class RSODataUtils {
 	
 	private static String mongoHost = "localhost";
 	
+	private static String onDutyListName = "onDutyList";
+	private static String scheduleListName = "scheduleList";
+	
 	private static final String appUserFilenamePath = "C:/jboss-as-7.1.1.Final/standalone/configuration/";
 	private static final String appUserFilename = "application-users.properties";
 	private static final String appRolesFilename = "application-roles.properties";
@@ -48,7 +53,7 @@ public class RSODataUtils {
 	
 	public String getRSOOnDutyList() throws UnknownHostException {
 		DB db = getDB();
-		DBCollection onDutyList = db.getCollection("onDutyList");
+		DBCollection onDutyList = db.getCollection(onDutyListName);
 				
 		DBCursor cursor = onDutyList.find();
 		List<DBObject> allRSOsOnDuty = cursor.toArray(); 
@@ -58,7 +63,7 @@ public class RSODataUtils {
 	
 	public String getRSOOnDutyList(Date now) throws UnknownHostException, MongoException {
 		DB db = getDB();
-		DBCollection onDutyList = db.getCollection("onDutyList");
+		DBCollection onDutyList = db.getCollection(onDutyListName);
 		
 		BasicDBObject query = new BasicDBObject();
 
@@ -71,14 +76,32 @@ public class RSODataUtils {
 		
 	}
 
+	public String getRSOScheduleList(Date now) throws UnknownHostException, MongoException {
+		DB db = getDB();
+		DBCollection scheduleList = db.getCollection(scheduleListName);
+		
+		BasicDBObject query = new BasicDBObject();
+		BasicDBObject sortBy = new BasicDBObject();
+
+		query.put("offDutyAt", new BasicDBObject("$gt", new Date()));  // e.g. find all where offDutyAt is greater than now
+		sortBy.put("onDutyAt", 1);
+		
+		DBCursor cursor = scheduleList.find(query);
+		cursor.sort(sortBy);
+		List<DBObject> allRSOs = cursor.toArray(); 
+		
+	    return allRSOs.toString();
+	}
+
 	public String addNewRSOOnDuty(DBObject dbObj) throws UnknownHostException {
 		DB db = getDB();
 		
-		DBCollection onDutyList = db.getCollection("onDutyList");
+		DBCollection onDutyList = db.getCollection(onDutyListName);
 		
 		onDutyList.insert(dbObj);
 	    return dbObj.toString();
 	}	
+	
 	
 	public DBObject getRSO(String username) throws UnknownHostException, MongoException {
 		DB db = getDB();
@@ -94,13 +117,32 @@ public class RSODataUtils {
 		
 	}
 	
+	public DBObject getRSOfromEmail(String email) throws UnknownHostException, MongoException {
+		DB db = getDB();
+	
+		DBObject dbObj = new BasicDBObject("email", email);
+		DBObject rso = null;
+		
+		DBCollection rsoList = db.getCollection("rsoList");
+		
+		DBCursor cursor = rsoList.find(dbObj);
+	
+		if (cursor.size() > 0) {
+		
+			List<DBObject> rsos = cursor.toArray(); 
+			rso = rsos.get(0);
+		}
+			
+		return rso;
+	}
+
 	public DBObject getOnDutyRSO(String username) throws UnknownHostException, MongoException {
 		DB db = getDB();
 
 		DBObject dbObj = new BasicDBObject("username", username);
 		DBObject rso = null;
 		
-		DBCollection rsoList = db.getCollection("onDutyList");
+		DBCollection rsoList = db.getCollection(onDutyListName);
 		
 		rso = rsoList.findOne(dbObj);
 			
@@ -126,6 +168,12 @@ public class RSODataUtils {
 		
 	}
 	
+	public void updateRSO(DBObject rso) throws UnknownHostException, MongoException {
+		DB db = getDB();
+		DBCollection rsoList = db.getCollection("rsoList");
+		rsoList.save(rso);
+	}
+
 	public String addNewRSO(String username, String firstName, String lastName, String email, String phone, String rsoID) throws UnknownHostException, MongoException {
 
 		DB db = getDB();
@@ -162,7 +210,7 @@ public class RSODataUtils {
 	
 	public String isOnDuty(String username) throws UnknownHostException, MongoException {
 		DB db = getDB();
-		DBCollection onDutyList = db.getCollection("onDutyList");
+		DBCollection onDutyList = db.getCollection(onDutyListName);
 		DBObject query = new BasicDBObject("username", username);
 		query.put("offDutyAt", new BasicDBObject("$gt", new Date()));  // e.g. find all where offDutyAt is greater than now
 		
@@ -192,7 +240,7 @@ public class RSODataUtils {
 	
 	public void rsoOffDuty(String username) throws UnknownHostException, MongoException {
 		DB db = getDB();
-		DBCollection onDutyList = db.getCollection("onDutyList");
+		DBCollection onDutyList = db.getCollection(onDutyListName);
 		DBObject dbObj = new BasicDBObject("username", username);
 		
 		onDutyList.remove(dbObj);
@@ -202,11 +250,45 @@ public class RSODataUtils {
 	
 	public void rsoOnDuty(DBObject rso) throws UnknownHostException, MongoException {
 		DB db = getDB();
-		DBCollection onDutyList = db.getCollection("onDutyList");
+		DBCollection onDutyList = db.getCollection(onDutyListName);
 		onDutyList.save(rso);
 	}
 
 	
+	public void scheduleRSO(String username, Date date, int duration, String scheduleType) throws UnknownHostException, MongoException {
+		DBObject rso = getRSO(username);
+		
+		ObjectId newId = new ObjectId();
+		
+		rso.put("_id", newId);
+		Calendar onDutyTime = Calendar.getInstance();
+		onDutyTime.setTime(date);
+		Calendar offDutyTime = Calendar.getInstance();
+		offDutyTime.setTime(date);
+		offDutyTime.add(Calendar.HOUR, duration);
+		
+		rso.put("onDutyAt", onDutyTime.getTime());
+		rso.put("offDutyAt", offDutyTime.getTime());
+		rso.put("type", scheduleType);
+	
+		DB db = getDB();
+		DBCollection scheduleList = db.getCollection(scheduleListName);
+		
+		scheduleList.insert(rso);
+			
+		
+	}
+
+	public void unscheduleRSO(String scheduleId) throws UnknownHostException, MongoException {
+		ObjectId id = new ObjectId(scheduleId);
+		DBObject obj = new BasicDBObject();
+		obj.put("_id", id);
+		DB db = getDB();
+		DBCollection scheduleList = db.getCollection(scheduleListName);
+
+		scheduleList.remove(obj);
+	}
+
 	public boolean isUsernameAvailable(String username) throws UnknownHostException, MongoException {	
 		Properties properties = getApplicationUsersProperties();
 		
@@ -377,31 +459,6 @@ public class RSODataUtils {
 			e.printStackTrace();
 		}		
 				
-	}
-
-	public void updateRSO(DBObject rso) throws UnknownHostException, MongoException {
-		DB db = getDB();
-		DBCollection rsoList = db.getCollection("rsoList");
-		rsoList.save(rso);
-	}
-
-	public DBObject getRSOfromEmail(String email) throws UnknownHostException, MongoException {
-		DB db = getDB();
-
-		DBObject dbObj = new BasicDBObject("email", email);
-		DBObject rso = null;
-		
-		DBCollection rsoList = db.getCollection("rsoList");
-		
-		DBCursor cursor = rsoList.find(dbObj);
-
-		if (cursor.size() > 0) {
-		
-			List<DBObject> rsos = cursor.toArray(); 
-			rso = rsos.get(0);
-		}
-			
-		return rso;
 	}
 
 	

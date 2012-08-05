@@ -12,7 +12,7 @@
 	<link href="<%= request.getContextPath() %>/css/style.css" rel="stylesheet" type="text/css"
 		media="screen" />
 	<link href="<%= request.getContextPath() %>/css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css"/>
-	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.8.21.custom.min.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/onDutyList.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/livevalidation_standalone.js"></script>

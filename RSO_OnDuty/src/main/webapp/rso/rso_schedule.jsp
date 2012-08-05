@@ -12,8 +12,88 @@
 	rel="stylesheet" type="text/css" />
 <link href="../css/style.css" rel="stylesheet" type="text/css"
 	media="screen" />
-<script type="text/javascript" src="../js/jquery-1.7.2.js"></script>
+	<link href="../css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="../js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="../js/onDutyList.js"></script>
+<script type="text/javascript" src="../js/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="../js/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="../js/livevalidation_standalone.js"></script>
+	
+<%@ page import="org.frederickiwla.utils.*" %>
+<%
+	RSODataUtils utils = new RSODataUtils();		
+	String username = request.getRemoteUser();
+
+	String isOnDuty = utils.isOnDuty(request.getRemoteUser());
+	// This is a comment
+%>
+
+<script type="text/javascript">
+	var username = "<%= request.getRemoteUser() %>";
+	var requestURL = "<%= request.getContextPath() %>";
+	setInterval(function() { loadScheduleDiv(username); },100000);
+	var isOnDuty = "<%= isOnDuty%>";
+
+
+	$(
+		function() {
+			loadScheduleDiv(username);	
+			$('#logoutButton').button();
+			$('#scheduleDate').datetimepicker({
+				ampm: true,
+				addSliderAccess: true,
+				stepMinute: 15,
+				hourGrid: 4,
+				minuteGrid: 15,
+				hourMin: 6,
+				hourMax: 20,
+				hour: 12,
+				minute: 0,
+				sliderAccessArgs: { touchonly: true }
+			});
+		}
+
+	);
+
+	function scheduleRSO(form) {
+//		$('#onDutyListContainer').fadeOut('slow');
+		//$('#scheduleResult').toggle('invisible');
+
+		var inputs = $("#scheduleDuty :input");
+		var rsoData = {};
+		$.map(inputs, function(n, i)
+		{
+			if (n.type == 'radio') {
+				if (n.checked) {
+					rsoData[n.name] = $(n).val();
+				}
+			} else {
+		    	rsoData[n.name] = $(n).val();
+			}
+		});		
+		
+		$.ajax({
+			'type': 'post',
+			'url': requestURL + "/api/OnDutyList/schedule/"+username,
+			'data' : rsoData,
+			'success' : function(data) {
+//				$('#scheduleResult').toggle('invisible');
+//				$('#onDutyListContainer').toggle('invisible');
+//				$('#scheduleResult').fadeIn('slow');
+//				setTimeout("$('#onDutyListContainer').fadeIn('slow'); ", 5000);
+				loadScheduleDiv(username);
+			},
+//			'error' : function(data) {
+//				alert("Something went wrong: "+data.toString());
+//			},
+			'async' : false
+		});
+	
+		
+	} 
+	
+</script>
 
 
 </head>
@@ -24,107 +104,97 @@
 
 	<div id="wrapper">
 		<div id="wrapper2">
-			<div id="header" class="container">
-				<div id="IWLA logo" style="float: left;">
-					<img height="80" src="../images/iwla.png"></img>
-				</div>
-				<div id="logo">
-					<h1>
-						<a href="#">RSO OnDuty </a>
-					</h1>
-				</div>
-				<div id="menu">
-					<ul>
-						<li><a href="../index.jsp">Homepage</a></li>
-						<li class="current_page_item"><a href="#">RSO Scheduling</a></li>
-						<li><a href="registration/rso_registration.jsp">RSO Registration</a></li>
-						<li><a href="http://frederickiwla.org">Frederick IWLA</a></li>
-					</ul>
-				</div>
-			</div>
-			<!-- end #header -->
-			<div id="rso-login-bar">
-				<div>
-				<%
-					String authType = request.getAuthType();
-					String remoteUser = request.getRemoteUser();
-				
-				%>
-				<p id="greeting">Hello </p>
-				<p>AuthType = <%= authType %></p>
-				
-				</div>
-				<script type="text/javascript">
-					var username = "<%= request.getRemoteUser() %>";
-					var requestURL = "<%= request.getRequestURL() %>";
-					var titleText ="Hello ";
-				
-					$(
-					    $.getJSON(requestURL+"api/RSOList/rso/"+username, function(onDutyList){
-				
-					         $("#greeting").html(titleText + this.firstName+" "+this.lastname);
-					    }
-	
-					);
-				</script>			
-				<%
-					if (request.isUserInRole("admin")) {
-				%>
-			</div>
-			<div id="rso-login-bar" style="height: 50px;">
-					<p style="padding-left: 50px;">You are an administrator.  Please <a href="registration/rso_registration_completion.jsp">click here</a> to complete user registration</p>
-			</div>
+			<jsp:include page="../header.jsp">
+			    <jsp:param name="currentPage" value="RSO Scheduling" />
+			</jsp:include>
 			
-			<%
-				}
-			%>
-			<div id="banner-wrapper">
-				<div id="on-duty-container">
-					<div id="currently-on-duty" class="duty-container" style="">
-						<form method="post" action="LoginServlet">
-							<table width="75%">
-								<tr>
-									<td>
-										<label for="date_input">Date:</label><input
-											id="date_input" type="text" id="date" name="date"
-											size="25" />
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<label for="startTime_input">Start time:</label><input
-											id="startTime_input" type="text" id="startTime" name="startTime"
-											size="25" />
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<label for="stopTime_input">Date:</label><input
-											id="stopTime_input" type="text" id="stopTime" name="stopTime"
-											size="25" />
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<input type="submit" name="submit" value="Submit" />
-									</td>
-								</tr>
-							
-							</table>
+			<div id="rso-login-bar">
+				<%
+						String fullName = utils.getRSOFullName(request.getRemoteUser());
+						boolean isVetted = utils.isRSOVetted(request.getRemoteUser());
+				%>
+				<div id="username">
+					<div style="float: left;" >
+						<h2 id="fullUserName" style="font-size: 1.6em;padding: 5px 50px 10px 10px;" >
+							Welcome, <%=fullName%></h2>
+					</div>
+					<div style="float: right;">
+						<form method="post" action="<%= request.getContextPath() %>/LoginServlet">
+							<div>
+								<input type="hidden" name="function" value="logout" />
+								<input id="logoutButton" type="submit" value="Logout"/>
+							</div>
 						</form>
 					</div>
 				</div>
-
 			</div>
 
+			<div id="schedule-wrapper" style="height: 410px">
+					<div id="currently-on-duty" class="schedule-container" style="float: left; ">
+						<div>
+							<h3 id="onDutyListCount" style="text-align: center; margin-top: 35px">Schedule Duty Time</h3>
+						</div>
+						<div id="onDutyListContainer" style="height: 90%; padding: 20px">
+							<div class="loginoptions">
+							<form class="basic" id="scheduleDuty" method="post" onsubmit="scheduleRSO(this);">							
+							<fieldset style="margin: 5px 0px 15px 0px; border-bottom: gray solid 1px;">
+								<input type="hidden" id="createAccount_username" name="username" value="<%= username %>"/>
+								<label for="scheduleDate" class="classic">Schedule Date</label>
+								<fieldset><input class="inpp" id="scheduleDate" name="scheduleDate"/></fieldset>
+								<script type="text/javascript">
+									var scheduleDate = new LiveValidation('scheduleDate', { 'validMessage' : 'OK' } );
+									scheduleDate.add( Validate.Presence );
+								</script>
+								<label class="classic" for="hours">How many hours?</label>
+								<fieldset>
+									<select class="inpp" id="hours" name="hours">
+									  <option>1</option>
+									  <option>2</option>
+									  <option>3</option>
+									  <option>4</option>
+									  <option>5</option>
+									  <option>6</option>
+									  <option>7</option>
+									  <option>8</option>
+									  <option>9</option>
+									  <option>10</option>
+									  <option>11</option>
+									  <option>12</option>
+									</select>
+								</fieldset>
+								<label for="scheduleRadio" class="classic">Schedule Type</label>
+									<fieldset >
+									<div id="scheduleRadio" >
+										<input type="radio" value="P" id="personalType" name="scheduleType" checked="checked" style="vertical-align: baseline" /><label for="personalType">Personal</label>
+										<input type="radio" value="C" id="clubObligationType" name="scheduleType"  style="vertical-align: baseline" /><label for="clubObligationType">Club</label>
+									</div>
+									</fieldset>
+							</fieldset>
+							<fieldset style="margin-top:15px" class="submit">
+								<input type="submit" name="submit" id="schedule_submit" value="Schedule Duty"/>
+							</fieldset>
+							</form>
+							<script type="text/javascript">
+									$('#schedule_submit').button();
+							</script>
+							</div>
+						</div>
+						<div class="invisible" id="scheduleResult" style="height: 90%; padding: 20px">
+							<div style="height=200px; text-align: center; vertical-align: middle;">
+								<h1>Successful Schedule submission</h1>
+							</div>
+						</div>
+					</div>
+					<div id="on-duty-schedule" class="schedule-container" style="float: left">
+						<div>
+							<h3 style="text-align: center;">Duty Schedule</h3>
+						</div>
+						<div id="scheduleListContainer" style="height: 90%; overflow: auto; "></div>
+					</div>
+				</div>
 		</div>
+
 	</div>
-	<div id="footer">
-		<p>
-			Copyright (c) 2012 frederickiwla.org. All rights reserved. Design by
-			<a href="http://www.freecsstemplates.org">FCT</a>.
-		</p>
-	</div>
-	<!-- end #footer -->
+	<jsp:include page="../footer.jsp" />
 </body>
 </html>

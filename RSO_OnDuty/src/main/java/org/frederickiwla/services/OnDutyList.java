@@ -1,6 +1,8 @@
 package org.frederickiwla.services;
 
 import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -39,6 +41,56 @@ public class OnDutyList {
 		return utils.getRSOOnDutyList(now);
 		
 	}
+	
+	
+	@GET()
+	@Path("/schedule")
+	@Produces("application/json")
+	public String getRSOScheduleList() throws UnknownHostException {
+		
+		RSODataUtils utils = new RSODataUtils();
+		Date now = new Date();
+		return utils.getRSOScheduleList(now);
+		
+	}
+	
+	@POST()
+	@Path("/schedule/{username}")
+	@Consumes("application/x-www-form-urlencoded")
+	public Response postRSOSchedule(@PathParam("username") String username, MultivaluedMap<String, String> form) throws UnknownHostException, ParseException {
+		RSODataUtils utils = new RSODataUtils();
+		
+		
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		String scheduleDate = form.getFirst("scheduleDate");
+		
+		Date date = formatter.parse(scheduleDate);
+		
+		int duration = Integer.parseInt(form.getFirst("hours"));
+		String scheduleType = form.getFirst("scheduleType");
+		
+		utils.scheduleRSO(username, date, duration, scheduleType);
+		
+		
+		return Response.status(Response.Status.OK).build();
+	}
+	
+	@POST()
+	@Path("/unschedule/{scheduleId}")
+	@Consumes("application/x-www-form-urlencoded")
+	public Response postRSOUnchedule(@PathParam("scheduleId") String scheduleId) throws UnknownHostException, ParseException {
+		RSODataUtils utils = new RSODataUtils();
+		
+				
+		utils.unscheduleRSO(scheduleId);
+		
+		
+		return Response.status(Response.Status.OK).build();
+	}
+	
+	
+
 	
 	
 	@POST()

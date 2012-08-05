@@ -12,7 +12,7 @@
 	<link href="css/style.css" rel="stylesheet" type="text/css"
 		media="screen" />
 	<link href="css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css"/>
-	<script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
 	<script type="text/javascript" src="js/onDutyList.js"></script>
 	<script type="text/javascript" src="js/livevalidation_standalone.js"></script>
@@ -70,7 +70,7 @@
 	<div id="wrapper">
 		<div id="wrapper2">
 			<jsp:include page="header.jsp">
-			    <jsp:param name="currentPage" value="RSO Registration" />
+			    <jsp:param name="currentPage" value="Account Settings" />
 			</jsp:include>
 			
 			<div id="everything_content">

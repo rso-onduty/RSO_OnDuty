@@ -12,7 +12,7 @@
 	<link href="css/style.css" rel="stylesheet" type="text/css"
 		media="screen" />
 	<link href="css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css"/>
-	<script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
 	<script type="text/javascript" src="js/onDutyList.js"></script>
 	<%@ page import="org.frederickiwla.utils.*" %>
@@ -27,7 +27,8 @@
 		var username = "<%= request.getRemoteUser() %>";
 		var requestURL = "<%= request.getContextPath() %>";
 		var titleText ="Currently On Duty: ";
-		setInterval(function() { loadOnDutyDiv(titleText); },100000);
+		setInterval(function() { loadOnDutyDiv(titleText); },60000);
+		setInterval(function() { loadScheduleDiv(username); },300000);
 		var isOnDuty = "<%= isOnDuty%>";
 	
 	
@@ -38,6 +39,7 @@
 				createExtendDutyButton();
 	
 				loadOnDutyDiv(titleText);
+				loadScheduleDiv(username);
 	
 		}
 	
@@ -186,6 +188,7 @@
 						<div>
 							<h3 style="text-align: center;">Duty Schedule</h3>
 						</div>
+						<div id="scheduleListContainer" style="height: 90%; overflow: auto; "></div>
 					</div>
 				</div>
 
@@ -200,7 +203,7 @@
 						<div style="clear: both;">&nbsp;</div>
 						<div class="entry">
 							<p>
-								Welcome to RSO OnDuty.  This site was built to help those who are are not Range Safty Officers but
+								Welcome to RSO OnDuty.  This site was built to help those who are are not Range Safety Officers but
 								but have a hard time finding out when one is on duty.  Sometimes you also want to be sure that you
 								are simply not alone at the range.  RSO OnDuty is here to help communicate when a RSO is at the range
 								so you can participate on the range and get full measure from your IWLA membership.

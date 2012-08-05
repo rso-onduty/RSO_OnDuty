@@ -21,7 +21,7 @@
 				<li>
 			<% } %>
 			<a href="<%= request.getContextPath() %>/rso/rso_schedule.jsp">RSO Scheduling</a></li>
-			<% if (request.getParameter("currentPage").equals("RSO Registration")) { %>
+			<% if (request.getParameter("currentPage").equals("Account Settings")) { %>
 				<li class="current_page_item">
 			<% } else { %>
 				<li>

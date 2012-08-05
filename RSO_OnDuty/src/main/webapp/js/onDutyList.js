@@ -21,7 +21,6 @@ function imOnDuty(button, username) {
 			'url': requestURL + "/api/OnDutyList/goOnDuty/"+username,
 			'data' : rsoData,
 			'success' : function(data) {
-//				alert(username + " is On Duty now for " + duration + " hours");
 				$("#onDutyButton").button("option", "label", "I'm Off Duty");
 				$("#extendDutyButton").attr("style","display: block");
 				isOnDuty = "true"; },
@@ -136,4 +135,73 @@ function loadOnDutyDiv(titleText) {
 //	window.status = "RSO OnDuty List refreshed at "+refreshDate.toLocaleTimeString();
 
 }
+
+function loadScheduleDiv(username) {
+	$("#scheduleListContainer").html("");
+	$.getJSON(requestURL+"/api/OnDutyList/schedule", function(scheduleList) {
+		
+		var groupDate = null;
+//         $("#onDutyListCount").html(titleText + onDutyListSize + " as of "+refreshDate.toLocaleTimeString());
+		jQuery.each(scheduleList, function(dutyEntry) {
+			var rsoName = "rsoNameLine"+dutyEntry;
+			var onDutyDate = new Date(this.onDutyAt.$date);
+			var offDutyDate = new Date(this.offDutyAt.$date);
+			var onDutyDateString = onDutyDate.toDateString();
+			var scheduleId = this._id.$oid;
+			if (onDutyDateString !== groupDate ) {
+				groupDate = onDutyDateString;
+				$("#scheduleListContainer").append("<div class='rso-schedule-date'><span class='rso-schedule-date-label' align='right'>"+groupDate+"</span></div>");
+				
+			}
+			
+			$("#scheduleListContainer").append("<div id='"+rsoName+"Actions' class='schedule-line-item'><div style='float: left;'><table id='"+rsoName+"Schedule'></table></div></div>");
+			var rsoScheduleTable = $("#"+rsoName+"Schedule");
+			var rsoScheduleActionsDiv = $("#"+rsoName+"Actions");
+
+			
+			var onDutyFormatted = onDutyDate.toLocaleTimeString();
+			var offDutyFormatted = offDutyDate.toLocaleTimeString();
+			rsoScheduleTable.append("<tr><td class='rso-table-label' align='right'>Name:</td><td class='rso-table-value' >"+this.firstName+" "+this.lastName+"</td></tr>");
+			rsoScheduleTable.append("<tr><td class='rso-table-label' align='right'>On Duty at:</td><td class='rso-table-value' >"+onDutyFormatted+"</td></tr>");
+			rsoScheduleTable.append("<tr><td class='rso-table-label' align='right'>Off duty at:</td><td class='rso-table-value' >"+offDutyFormatted+"</td></tr>");
+
+			if (this.username == username)  {
+				rsoScheduleActionsDiv.append("<div style='float: right; padding: 5px'><a href='#' onclick='unscheduleRSO(\""+scheduleId+"\")'><img src='"+requestURL+"/images/delete-x.png'/></a></div>");
+			}
+			
+			if (this.type == "C") {
+				rsoScheduleActionsDiv.append("<div style='float: right; padding: 5px'><img src='"+requestURL+"/images/club.png'/></div>");
+				
+			} else {
+				rsoScheduleActionsDiv.append("<div style='float: right; padding: 5px'><img src='"+requestURL+"/images/personal.png'/></div>");
+			}
+
+    	});
+	});
+	
+	
+	
+}
+
+function unscheduleRSO(scheduleId) {
+
+	var rsoData = {};
+	
+	$.ajax({
+		'type': 'post',
+		'url': requestURL + "/api/OnDutyList/unschedule/"+scheduleId,
+		'data' : rsoData,
+		'success' : function(data) {
+			alert("unscheduled");
+			loadScheduleDiv(username);
+		},
+//		'error' : function(data) {
+//			alert("Something went wrong: "+data.toString());
+//		},
+		'contentType' : "application/x-www-form-urlencoded",
+		'async' : false
+	});
+	
+} 
+
 	
