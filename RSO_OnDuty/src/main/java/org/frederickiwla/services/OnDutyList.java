@@ -76,6 +76,28 @@ public class OnDutyList {
 	}
 	
 	@POST()
+	@Path("/vetRSO/{rsoId}")
+	@Consumes("application/x-www-form-urlencoded")
+	public Response postVetRSO(@PathParam("rsoId") String rsoId) throws UnknownHostException, ParseException {
+		RSODataUtils utils = new RSODataUtils();
+		
+		utils.vetRSO(rsoId);
+		
+		return Response.status(Response.Status.OK).build();		
+	}
+
+	@POST()
+	@Path("/unvetRSO/{rsoId}")
+	@Consumes("application/x-www-form-urlencoded")
+	public Response postUnvetRSO(@PathParam("rsoId") String rsoId) throws UnknownHostException, ParseException {
+		RSODataUtils utils = new RSODataUtils();
+		
+		utils.unvetRSO(rsoId);
+		
+		return Response.status(Response.Status.OK).build();		
+	}
+	
+	@POST()
 	@Path("/schedule/{username}")
 	@Consumes("application/x-www-form-urlencoded")
 	public Response postRSOSchedule(@PathParam("username") String username, MultivaluedMap<String, String> form) throws UnknownHostException, ParseException {

@@ -236,8 +236,9 @@
 			</div>
 			<!-- end #page -->
 		</div>
+		<jsp:include page="footer-links.jsp" />
+		<jsp:include page="footer.jsp" />
 	</div>
-	<jsp:include page="footer-links.jsp" />
-	<jsp:include page="footer.jsp" />
+
 </body>
 </html>

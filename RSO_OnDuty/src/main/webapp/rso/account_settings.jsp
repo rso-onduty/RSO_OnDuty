@@ -82,7 +82,14 @@
 							<fieldset>
 								<input class="inpp" id="createAccount_phone" name="phone"  value="<%= rso.get("phone") %>"/>
 							</fieldset>
+							<label for="createAccount_rsoID" class="classic">RSO Number</label>
+							<fieldset>
+								<input class="inpp" id="createAccount_rsoID" name="rsoID"  value="<%= rso.get("rsoID") %>"/>
+							</fieldset>
 							<script type="text/javascript">
+								var createAccount_rsoID = new LiveValidation('createAccount_rsoID', { 'validMessage' : 'OK' } );
+								createAccount_rsoID.add( Validate.Presence );
+								createAccount_rsoID.add( Validate.Numericality, { onlyInteger: true } );
 								var createAccount_firstname = new LiveValidation('createAccount_firstname', { 'validMessage' : 'OK' } );
 								createAccount_firstname.add( Validate.Presence );
 								var createAccount_lastname = new LiveValidation('createAccount_lastname', { 'validMessage' : 'OK' } );

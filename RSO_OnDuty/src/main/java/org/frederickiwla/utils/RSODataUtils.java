@@ -64,11 +64,11 @@ public class RSODataUtils {
 	
 	public String getUnvettedRSOList() throws UnknownHostException {
 		DB db = getDB();
-		DBCollection onDutyList = db.getCollection(rsoListName);
+		DBCollection rsoList = db.getCollection(rsoListName);
 		BasicDBObject query = new BasicDBObject();
 		query.put("dateVetted", null);
 				
-		DBCursor cursor = onDutyList.find(query);
+		DBCursor cursor = rsoList.find(query);
 		List<DBObject> unvettedlRSOs = cursor.toArray(); 
 			
 	    return unvettedlRSOs.toString();
@@ -77,17 +77,43 @@ public class RSODataUtils {
 	
 	public String getVettedRSOList() throws UnknownHostException {
 		DB db = getDB();
-		DBCollection onDutyList = db.getCollection(rsoListName);
+		DBCollection rsoList = db.getCollection(rsoListName);
 		BasicDBObject query = new BasicDBObject();
 		query.put("dateVetted", new BasicDBObject("$ne", null));  
 		
-		DBCursor cursor = onDutyList.find(query);
+		DBCursor cursor = rsoList.find(query);
 		List<DBObject> unvettedlRSOs = cursor.toArray(); 
 			
 	    return unvettedlRSOs.toString();
 	}
 	
 	
+	public void vetRSO(String rsoId) throws UnknownHostException, MongoException {
+		DB db = getDB();
+		DBCollection rsoList = db.getCollection(rsoListName);
+		BasicDBObject query = new BasicDBObject();
+		query.put("_id", new ObjectId(rsoId));
+		
+		DBObject rso = rsoList.findOne(query);
+		
+		rso.put("dateVetted", new Date());
+		
+		rsoList.save(rso);		
+	}
+	
+	public void unvetRSO(String rsoId) throws UnknownHostException, MongoException {
+		DB db = getDB();
+		DBCollection rsoList = db.getCollection(rsoListName);
+		BasicDBObject query = new BasicDBObject();
+		query.put("_id", new ObjectId(rsoId));
+		
+		DBObject rso = rsoList.findOne(query);
+		
+		rso.put("dateVetted", null);
+		
+		rsoList.save(rso);		
+	}
+
 	public String getRSOOnDutyList(Date now) throws UnknownHostException, MongoException {
 		DB db = getDB();
 		DBCollection onDutyList = db.getCollection(onDutyListName);

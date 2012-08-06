@@ -51,7 +51,7 @@
 				var rsoName = "rsoNameLine"+rsoEntryIndex;
 				var rsoId = this._id.$oid;
 				var regDate = new Date(this.dateRegistered.$date);
-				var regDateFormatted = regDate.toLocaleTimeString();
+				var regDateFormatted = regDate.toLocaleDateString();
 				
 				$("#unvettedListContainer").append("<div id='"+rsoName+"UnvActions' class='vetting-line-item'><div style='float: left;'><table id='"+rsoName+"Unv'></table></div></div>");
 				var rsoTable = $("#"+rsoName+"Unv");
@@ -83,7 +83,7 @@
 				var rsoName = "rsoNameLine"+rsoEntryIndex;
 				var rsoId = this._id.$oid;
 				var vettedDate = new Date(this.dateVetted.$date);
-				var vettedDateFormatted = vettedDate.toLocaleTimeString();
+				var vettedDateFormatted = vettedDate.toLocaleDateString();
 				
 				$("#vettedListContainer").append("<div id='"+rsoName+"Actions' class='vetting-line-item'><div style='float: left;'><table id='"+rsoName+"'></table></div></div>");
 				var rsoTable = $("#"+rsoName);
@@ -107,37 +107,40 @@
 	}	
 		
 	function vetRSO(rsoId) {
-//		$('#onDutyListContainer').fadeOut('slow');
-		//$('#scheduleResult').toggle('invisible');
 
-		var inputs = $("#scheduleDuty :input");
-		var rsoData = {};
-		$.map(inputs, function(n, i)
-		{
-			if (n.type == 'radio') {
-				if (n.checked) {
-					rsoData[n.name] = $(n).val();
-				}
-			} else {
-		    	rsoData[n.name] = $(n).val();
-			}
-		});		
-		
 		$.ajax({
 			'type': 'post',
-			'url': requestURL + "/api/OnDutyList/schedule/"+username,
-			'data' : rsoData,
+			'url': requestURL + "/api/OnDutyList/vetRSO/"+rsoId,
+			'data' : null,
 			'success' : function(data) {
-//				$('#scheduleResult').toggle('invisible');
-//				$('#onDutyListContainer').toggle('invisible');
-//				$('#scheduleResult').fadeIn('slow');
-//				setTimeout("$('#onDutyListContainer').fadeIn('slow'); ", 5000);
-				loadScheduleDiv(username);
+				loadUnvettedDiv();	
+				loadVettedDiv();
 			},
 //			'error' : function(data) {
 //				alert("Something went wrong: "+data.toString());
 //			},
-			'async' : false
+			'async' : false,
+			'contentType' : 'application/x-www-form-urlencoded'
+		});
+	
+	
+	}	
+
+	function unvetRSO(rsoId) {
+
+		$.ajax({
+			'type': 'post',
+			'url': requestURL + "/api/OnDutyList/unvetRSO/"+rsoId,
+			'data' : null,
+			'success' : function(data) {
+				loadUnvettedDiv();	
+				loadVettedDiv();
+			},
+//			'error' : function(data) {
+//				alert("Something went wrong: "+data.toString());
+//			},
+			'async' : false,
+			'contentType' : 'application/x-www-form-urlencoded'
 		});
 	
 	
@@ -183,13 +186,13 @@
 			<div id="schedule-wrapper" style="height: 410px">
 					<div id="unvetted-rso-list" class="schedule-container" style="float: left; ">
 						<div>
-							<h3 id="unvettedListCount" style="text-align: center;">Unvetted RSO Registrations</h3>
+							<h3 id="unvettedListCount" style="text-align: center; background-color: whiteSmoke">Unvetted RSO Registrations</h3>
 						</div>
 						<div id="unvettedListContainer" style="height: 90%; overflow: auto; "></div>
 					</div>
 					<div id="unvetted-rso-list" class="schedule-container" style="float: left">
 						<div>
-							<h3 id="vettedListCount" style="text-align: center;">Vetted RSO List</h3>
+							<h3 id="vettedListCount" style="text-align: center; background-color: whiteSmoke">Vetted RSO List</h3>
 						</div>
 						<div id="vettedListContainer" style="height: 90%; overflow: auto; "></div>
 					</div>

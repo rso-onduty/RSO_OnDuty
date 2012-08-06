@@ -166,9 +166,11 @@
 							<script type="text/javascript">
 								var createAccount_rsoid = new LiveValidation('createAccount_rsoid', { 'validMessage' : '' } );
 								createAccount_rsoid.add( Validate.Presence );
+								createAccount_rsoid.add( Validate.Numericality, { onlyInteger: true } );
 					            var createAccount_rsoidcf = new LiveValidation('createAccount_rsoidcf');
 					            createAccount_rsoidcf.add(Validate.Confirmation, { match: 'createAccount_rsoid', failureMessage: "Your RSO IDs don't match!", 'validMessage' : 'RSO IDs match!'} );
 					            createAccount_rsoidcf.add( Validate.Presence );
+					            createAccount_rsoidcf.add( Validate.Numericality, { onlyInteger: true } );
 							</script>
 						</fieldset>
 						<fieldset>

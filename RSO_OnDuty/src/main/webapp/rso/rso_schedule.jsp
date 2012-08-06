@@ -129,8 +129,8 @@
 				</div>
 			</div>
 
-			<div id="schedule-wrapper" style="height: 410px">
-					<div id="currently-on-duty" class="schedule-container" style="float: left; ">
+			<div id="schedule-wrapper" style="height: 420px">
+					<div id="currently-on-duty" class="schedule-container" style="border-style: none; float: left; ">
 						<div>
 							<h3 id="onDutyListCount" style="text-align: center; margin-top: 35px">Schedule Duty Time</h3>
 						</div>
@@ -192,6 +192,12 @@
 						<div id="scheduleListContainer" style="height: 90%; overflow: auto; "></div>
 					</div>
 				</div>
+		</div>
+		<div id="legend" style="width: 1000px; margin: auto; height: 50px">
+			<div style="float: right"><p> = Club Obligation</p></div>
+			<div style="float: right"><img style='padding-left: 20px' src="/images/club.png"/></div>
+			<div style="float: right"><p> = Personal Schedule</p></div>
+			<div style="float: right"><img src="/images/personal.png"/></div>
 		</div>
 
 	</div>

@@ -43,7 +43,8 @@ public class UpdateAccount extends HttpServlet {
 		String lastName = request.getParameter("lastname");
 		String email = request.getParameter("email");
 		String phone = request.getParameter("phone");
-
+		String rsoID = request.getParameter("rsoID");
+		
 		try {
 			DBObject rso = utils.getRSO(username);
 			
@@ -54,13 +55,15 @@ public class UpdateAccount extends HttpServlet {
 				.append("\tFirst name = "+firstName+"\n")
 				.append("\tLast name = "+lastName+"\n")
 				.append("\tEmail = "+email+" (which is pretty obvious if you got this email)\n")
-				.append("\tPhone = "+phone+"\n");
+				.append("\tPhone = "+phone+"\n")
+				.append("\tRSO Number = "+rsoID+"\n");
 			
 			
 			rso.put("firstName", firstName);
 			rso.put("lastName", lastName);
 			rso.put("email", email);
 			rso.put("phone", phone);
+			rso.put("rsoID", rsoID);
 			
 			utils.updateRSO(rso);
 			
