@@ -54,6 +54,7 @@
 							<li class="nav-title"><a href="#">RSO Account</a></li>
 							<li class="nav-first"><a href="account_settings.jsp">Account Settings</a></li>
 							<li class="nav-first"><a href="#">Change Password</a></li>
+							<li class="nav-first"><a href="notifications.jsp">Notifications</a></li>
 						</ul>
 					</div>
 				</div>

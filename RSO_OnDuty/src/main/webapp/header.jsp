@@ -1,6 +1,6 @@
 <div id="header" class="container">
 	<div id="IWLA logo" style="float: left;">
-		<img height="80" src="<%= request.getContextPath() %>/images/iwla.png"></img>
+		<a href="http://frederickiwla.org"><img alt="Goto the Frederick IWLA Website" height="80" src="<%= request.getContextPath() %>/images/iwla.png"></img></a>
 	</div>
 	<div id="logo">
 		<h1>
@@ -33,7 +33,12 @@
 			<% } else { %>
 				<a href="<%= request.getContextPath() %>/rso/account_settings.jsp">Account Settings</a></li>
 			<% } %>
-			<li><a href="http://frederickiwla.org">Frederick IWLA</a></li>
+			<% if (request.getParameter("currentPage").equals("Notifications")) { %>
+				<li class="current_page_item">
+			<% } else { %>
+				<li>
+			<% } %>
+			<a href="<%= request.getContextPath() %>/notifications.jsp">Notifications</a></li>
 		</ul>
 	</div>
 </div>

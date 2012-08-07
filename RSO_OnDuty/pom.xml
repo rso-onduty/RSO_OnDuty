@@ -5,7 +5,7 @@
 	<groupId>org.frederickiwla</groupId>
 	<artifactId>RSO_OnDuty</artifactId>
 	<packaging>war</packaging>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.1.2-SNAPSHOT</version>
 	<name>RSO OnDuty Webapp</name>
 	<url>http://maven.apache.org</url>
 
@@ -131,4 +131,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<ciManagement>
+		<system>Jenkins</system>
+	</ciManagement>
+	<scm>
+		<url>git://github.com/rso-onduty/RSO_OnDuty.git</url>
+		<developerConnection>Jeff Simpson</developerConnection>
+	</scm>
 </project>
