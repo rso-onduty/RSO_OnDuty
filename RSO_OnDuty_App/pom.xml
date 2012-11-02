@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- Model Version -->
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- Artifact Information -->
+  <groupId>org.frederickiwla</groupId>
+  <artifactId>RSO_OnDuty_Agg</artifactId>
+  <name>Aggregator POM for RSO OnDuty Application</name>
+  <version>1.0.0-SNAPSHOT</version>
+  <description>Aggregator POM for JBoss EJB3 Examples</description>
+  <packaging>pom</packaging>
+
+  <!-- Modules in Aggregator -->
+  <modules>
+    <module>RSO_OnDuty_EAR</module>
+    <module>RSO_OnDuty_Core</module>
+    <module>RSO_OnDuty</module>
+
+  </modules>
+
+</project>

@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.frederickiwla</groupId>
-	<artifactId>RSO_OnDuty2</artifactId>
+	<artifactId>RSO_OnDuty_Web</artifactId>
 	<packaging>war</packaging>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.1.2-SNAPSHOT</version>
 	<name>RSO OnDuty Webapp</name>
 	<url>http://maven.apache.org</url>
 
@@ -113,7 +113,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>RSO_OnDuty2</finalName>
+		<finalName>RSO_OnDuty</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.jboss.as.plugins</groupId>
@@ -131,4 +131,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<ciManagement>
+		<system>Jenkins</system>
+	</ciManagement>
+	<scm>
+		<url>git://github.com/rso-onduty/RSO_OnDuty.git</url>
+		<developerConnection>Jeff Simpson</developerConnection>
+	</scm>
 </project>
